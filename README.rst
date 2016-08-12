@@ -4,6 +4,7 @@ Cask Docs-site GitHub Pages
 
 Cask Documentation Pages
 
+- `FindBugs-jsr305 2.0.1 API Javadoc pages <hosted-javadocs/jsr305-2.0.1-javadoc/index.html>`__
 - `FindBugs-jsr305 3.0.1 API Javadoc pages <hosted-javadocs/jsr305-3.0.1-javadoc/index.html>`__
 
 
