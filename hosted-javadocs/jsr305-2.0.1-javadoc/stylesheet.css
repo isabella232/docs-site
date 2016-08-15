@@ -5,7 +5,7 @@ Overall document style
 
 @font-face {
     font-family: 'Source Sans Pro';
-    src: local('Source Sans Pro'), local('SourceSansPro'), url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
+    src: local('Source Sans Pro'), local('SourceSansPro'), url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
 }
 body {
     background-color:#ffffff;
