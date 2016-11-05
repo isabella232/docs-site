@@ -30,13 +30,18 @@ as they are copies used to test the menus when the configuration file has been g
 
 scripts
 =======
-Script used to create the JSON and timeline from the configuration files (conf.txt) in these directories::
+Script used to create the JSON, timeline, and current version from the configuration files
+for these files::
 
   www/cdap/json-versions.js
+  www/cdap/version
   www/coopr/json-versions.js
+  www/coopr/version
   www/tigon/json-versions.js
+  www/tigon/version
 
-Run ``build.sh`` to generate the JSON (for menu and timeline), and update the version file, such as::
+Run ``build.sh`` to generate the JSON (for menu and timeline), and update the version
+file, such as::
 
   $ ./build.sh build-json cdap
   
