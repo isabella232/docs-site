@@ -1,0 +1,63 @@
+{
+  "template": "ETLBatch",
+  "description": "writes purchase events in a stream to files",
+  "config": {
+    "schedule": "*/2 * * * *",
+    "sink": {
+      "name": "TPFSAvro",
+      "properties": {
+        "name": "purchasesClean",
+        "schema": "{
+          \"type\":\"record\",
+          \"name\":\"purchaseClean\",
+          \"fields\":[
+            {\"name\":\"ts\",\"type\":\"long\"},
+            {\"name\":\"item\",\"type\":\"string\"},
+            {\"name\":\"purchased\",\"type\":\"int\"},
+            {\"name\":\"itemPrice\",\"type\":\"int\"},
+            {\"name\":\"transactionPrice\",\"type\":\"int\"},
+            {\"name\":\"tax\",\"type\":\"int\"}
+          ]
+        }"
+      }
+    },
+    "source": {
+      "name": "Stream",
+      "properties": {
+        "duration": "2m",
+        "format": "csv",
+        "name": "purchases",
+        "schema": "{
+          \"type\": \"record\",
+          \"name\": \"purchase\",
+          \"fields\": [
+            { \"name\": \"item\", \"type\": \"string\" },
+            { \"name\": \"purchased\", \"type\": \"int\" },
+            { \"name\": \"itemPrice\", \"type\": \"double\" },
+            { \"name\": \"transactionPrice\", \"type\": \"double\"}
+          ]
+        }"
+      }
+    },
+    "transforms": [
+      {
+        "name": "Script",
+        "properties": {
+          "schema": "{
+            \"type\": \"record\",
+            \"name\": \"purchaseClean\",
+            \"fields\": [
+              { \"name\": \"ts\", \"type\": \"long\" },
+              { \"name\": \"item\", \"type\": \"string\" },
+              { \"name\": \"purchased\", \"type\": \"int\" },
+              { \"name\": \"itemPrice\", \"type\": \"int\" },
+              { \"name\": \"transactionPrice\", \"type\": \"int\" },
+              { \"name\": \"tax\", \"type\": \"int\" }
+            ]
+          }",
+          "script": "function transform(input) { return { 'ts': input.ts, 'item': input.item, 'purchased': input.purchased, 'itemPrice': input.itemPrice * 100, 'transactionPrice': input.transactionPrice * 100, 'tax': (input.transactionPrice - input.purchased * input.itemPrice) * 100 }; }"
+        }
+      }
+    ]
+  }
+}
