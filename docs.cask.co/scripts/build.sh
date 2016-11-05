@@ -15,9 +15,10 @@
 # the License.
 
 
-# Builds a version menu from a configuration file.
-# The configuration file is specific for the product (cdap, coopr, tigon)
-# The resulting version menu is a JavaScript file, placed in the product directory on the web server
+# Builds a version menu ('json-versions.js') and 'version' file from a configuration file.
+# The configuration file is specific for the product (cdap, coopr, tigon).
+# The resulting version menu is a JavaScript file, placed in the product directory on the web server.
+# The 'version' file is a text file with the current version, placed in the product directory on the web server.
 
 cd $(cd $(dirname ${BASH_SOURCE[0]}); pwd -P)
 
@@ -32,12 +33,12 @@ function usage() {
   echo "Usage: ${SCRIPT} <option>"
   echo
   echo "  Options (select one):"
-  echo "    build-jsons-all    Builds the json-versions.js for the types"
-  echo "                       and outputs each to that type's top-level directory:"
+  echo "    build-jsons-all    Builds the json-versions.js and version for the types"
+  echo "                       and outputs them to that type's top-level directory:"
   echo "                       ${TYPES}"
   echo
-  echo "    build-json <type>  Builds the json-versions.js for a particular type"
-  echo "                       and outputs to that type's top-level directory:"
+  echo "    build-json <type>  Builds the json-versions.js and version for a particular type"
+  echo "                       and outputs them to that type's top-level directory:"
   echo "                       one of ${TYPES}"
   echo
   echo "    help               This usage statement"
