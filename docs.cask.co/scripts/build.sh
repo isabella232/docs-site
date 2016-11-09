@@ -65,8 +65,11 @@ function build_jsons() {
     python builder.py "${SCRIPT_PATH}/../configs/${type}.txt" "${SCRIPT_PATH}/../www/${type}/${JSON_VERSIONS_JS}"
     warnings=$?
     if [[ ${warnings} -eq 0 ]]; then
-      echo "Wrote '${JSON_VERSIONS_JS}' and 'version' file for type ${type}"
+      echo "Wrote '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
       echo
+    else
+      echo "Could not create '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
+      return ${warnings}
     fi
   done
   return ${warnings}
