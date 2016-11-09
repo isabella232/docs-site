@@ -29,9 +29,9 @@ TYPES=$(cd ${SCRIPT_PATH}/../configs; ls -1 | sed -e 's/.txt//')
 function usage() {
   echo "Building script for version menu for documentation."
   echo
-  echo "Usage: ${SCRIPT} [type]"
+  echo "Usage: ${SCRIPT} type"
   echo
-  echo "Where <type> is one of:"
+  echo "Where type is one of:"
   echo
   echo "all"
   echo "${TYPES}"
@@ -39,7 +39,7 @@ function usage() {
   echo "  If 'all' is specified, builds the json-versions.js and version for all of the types"
   echo "  and outputs them to each type's top-level directory."
   echo
-  echo "  If <type> is specified, builds the json-versions.js and version for that type"
+  echo "  If a <type> is specified, builds the json-versions.js and version for that type"
   echo "  and outputs them to that type's top-level directory."
   echo
   echo "  In both cases, any intermediate directories required are created."
