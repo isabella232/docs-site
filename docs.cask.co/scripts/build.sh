@@ -64,7 +64,25 @@ function die() {
   exit 1
 }
 
+function clean_current_from_target() {
+  local warnings
+  for type in ${TYPES}; do
+    local current="${TARGET_PATH}/${type}/current"
+    if [[ -d ${current} ]]; then
+      rm -rf ${current}
+      warnings=$?
+      if [[ ${warnings} -eq 0 ]]; then
+        echo "Cleaned ${current} directory"
+        echo
+      else
+        die "Could not clean ${current} directory"
+      fi
+    fi
+  done
+}
+
 function clean_target() {
+  local warnings
   rm -rf ${TARGET_PATH}
   mkdir ${TARGET_PATH}
   warnings=$?
@@ -72,34 +90,37 @@ function clean_target() {
     echo "Cleaned ${TARGET_PATH} directory"
     echo
   else
-    echo "Could not clean ${TARGET_PATH} directory"
+    die "Could not clean ${TARGET_PATH} directory"
   fi
-  return ${warnings}
+}
+
+function copy_www_to_target() {
+  local warnings
+  cp -R ${WWW_PATH}/* ${TARGET_PATH}
+  warnings=$?
+  if [[ ${warnings} -eq 0 ]]; then
+    echo "Copied ${WWW_PATH}/* to ${TARGET_PATH}"
+    echo
+  else
+    die "Could not copy ${WWW_PATH}/* to ${TARGET_PATH}"
+  fi
 }
 
 function build_test() {
   local warnings
   clean_target
-  if [[ ${warnings} -ne 0 ]]; then
-    return ${warnings}
-  fi
-  cp -R ${WWW_PATH}/* ${TARGET_PATH}
-  warnings=$?
-  if [[ ${warnings} -ne 0 ]]; then
-    return ${warnings}
-  fi
+  copy_www_to_target
   _build_json ${TYPES}
 }
 
 function build_jsons() {
   local warnings
-  clean_target
-  if [[ ${warnings} -ne 0 ]]; then
-    return ${warnings}
-  fi
   if [[ -z ${@} ]]; then
     die "Type needs to be provided."
   fi
+  clean_target
+  copy_www_to_target
+  clean_current_from_target
   _build_json ${@}
 }
 
@@ -114,11 +135,9 @@ function _build_json() {
       echo "Wrote '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
       echo
     else
-      echo "Could not create '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
-      return ${warnings}
+      die "Could not create '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
     fi
   done
-  return ${warnings}
 }
 
 if [ $# -lt 1 ]; then

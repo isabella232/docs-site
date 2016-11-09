@@ -19,13 +19,16 @@ Top-level directory, to be mapped to the web server.
 
 This is intended for Amazon S3.
 
-Exclude these directories from syncing::
+These directories are excluded from syncing::
 
   www/cdap/current
   www/coopr/current
   www/tigon/current
 
 as they are copies used to test the menus when the configuration file has been generated.
+
+The build script (see below) copies the contents of ``www`` to the ``target`` directory when
+it is run.
 
 
 scripts
@@ -45,14 +48,22 @@ file, such as::
 
   $ ./build.sh cdap
   
-To generate all JSONs and version files, use::
+To generate all JSONs and version files (intended for use by Bamboo build plans) use::
 
   $ ./build.sh all
+  
+To generate all JSONs and version files, and copy supporting files for manually checking results, use::
+
+  $ ./build.sh test
+  
+You can then open index files (such as ``target/cdap/index.html`` and ``target/cdap/current/index.html``)
+and check the generated timelines and drop-down version menus.
   
 For usage::
 
   $ ./build.sh
-  
+
+The Python script (``builder.py``) is called by ``build.sh`` and actually generates the timeline and version files.
 
 Copyright
 =========
