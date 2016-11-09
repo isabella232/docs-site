@@ -43,12 +43,16 @@ for these files::
 Run ``build.sh`` to generate the JSON (for menu and timeline), and update the version
 file, such as::
 
-  $ ./build.sh build-json cdap
+  $ ./build.sh cdap
   
 To generate all JSONs and version files, use::
 
-  $ ./build.sh build-jsons-all
+  $ ./build.sh all
+  
+For usage::
 
+  $ ./build.sh
+  
 
 Copyright
 =========

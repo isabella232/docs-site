@@ -3,7 +3,7 @@
 
 # Copyright © 2015-2016 Cask Data, Inc.
 # 
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# Licensed under the Apache License, Version 2.0 (the 'License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
 # the License at
 # 
@@ -21,8 +21,7 @@
 
 # JSON Creation (json-versions.js)
 # Creates a JSON file with timeline and formatting information from the data in a 
-# supplied configuration file
-# conf.py ("versions_data")
+# supplied configuration file.
 
 import os
 import sys
@@ -35,21 +34,21 @@ def parse_options():
     """
 
     parser = OptionParser(
-        usage="%prog source target",
-        description="Builds a timeline and menu in Javascript format for a web page.")
+        usage="%prog config target",
+        description='Builds a timeline and menu in Javascript format for a web page.')
 
     (options, args) = parser.parse_args()
     
     if len(args) < 2:
         parser.print_help()
-        print "A 'source' and a 'target' must be supplied."
+        print "A 'config' and a 'target' must be supplied."
         sys.exit(1)
                 
     return options, args, parser
 
 def _build_timeline():
-    """Takes a dictionary ('versions_data') from a global variable ('configuration') in a conf.py
-    and creates a timeline in a json file
+    """Takes a dictionary ('versions_data') from a global variable ('configuration')
+    and creates a timeline in a JSON file.
     
     versions_data is a dictionary. 
     
@@ -96,10 +95,10 @@ def _build_timeline():
     """
     global configuration
 
-    versions_data = configuration["versions_data"]
-    older = versions_data["older"]
+    versions_data = configuration['versions_data']
+    older = versions_data['older']
     rev_older = list(older)
-    rev_older.insert(0, versions_data["current"])
+    rev_older.insert(0, versions_data['current'])
     rev_older.reverse() # Now in lowest to highest versions
     data = []
     data_index = []
@@ -201,7 +200,7 @@ def _build_timeline():
             else:
                 delta_string = ''
         elif level == '1':
-            # Dated from previous "0" level (current_date)
+            # Dated from previous '0' level (current_date)
             delta_string = diff_between_date_strings(date, current_date)
             current_date = date
         data[i].append(delta_string)
@@ -226,19 +225,19 @@ def diff_between_date_strings(date_a, date_b):
     delta = b - a
     diff = abs(delta.days)
     if diff == 1:
-        days = "day"
+        days = 'day'
     else:
-        days = "days"
+        days = 'days'
     delta_string = " (%s %s)" % (diff, days)
     return delta_string
 
 def get_current_version():
     global configuration
     current_version = None
-    if "versions_data" in configuration:
-        versions_data = configuration["versions_data"]
-        if "current" in versions_data and len(versions_data["current"]) > 0:
-            return "%s\n" % versions_data["current"][0]
+    if 'versions_data' in configuration:
+        versions_data = configuration['versions_data']
+        if 'current' in versions_data and len(versions_data['current']) > 0:
+            return "%s\n" % versions_data['current'][0]
     else:
         return None
 
@@ -261,21 +260,22 @@ def pretty_print_json_versions():
 
 def print_json_versions_file():
     global configuration
-    head, tail = os.path.split(configuration["versions"])
+    head, tail = os.path.split(configuration['versions'])
     print tail
 
 def read_configuration(config_file_path):
+    """Reads a configuration file and generates a configuration dictionary from it."""
     global configuration
     print "Reading configuration file %s" % config_file_path
     configuration = {
-      "versions":"",
-      "versions_data":
-        { "development": [], 
-          "current": [],
-          "older": [],
+      'versions':'',
+      'versions_data':
+        { 'development': [], 
+          'current': [],
+          'older': [],
         },
     }
-    sections = ["versions", "development", "current", "older"]
+    sections = ['versions', 'development', 'current', 'older']
     section = None
     if os.path.isfile(config_file_path):
         with open(config_file_path,'r') as f:
@@ -286,13 +286,13 @@ def read_configuration(config_file_path):
                 elif section:
                     if line.startswith('#') or not line:
                         continue
-                    elif section == "versions":
+                    elif section == 'versions':
                         configuration[section] = line
-                    elif section == "current":
-                         configuration["versions_data"][section] = converted_line(line)
+                    elif section == 'current':
+                         configuration['versions_data'][section] = converted_line(line)
                     else:
-                        # In part of "versions_data"
-                         configuration["versions_data"][section].append(converted_line(line))
+                        # In part of 'versions_data'
+                         configuration['versions_data'][section].append(converted_line(line))
                 elif line.startswith('#') or not line:
                     section = None
     else:
@@ -307,8 +307,12 @@ def write_js_versions(target):
     target_dir = os.path.dirname(target)
     version = os.path.join(target_dir, 'version')
     if not os.path.exists(target_dir):
-        print "Could not write to %s" % target_dir
-        return 1
+        try:
+            os.makedirs(target_dir)
+            print "Created %s" % target_dir
+        except Exception, e:
+            print "Could not write to %s" % target_dir
+            raise e
     for file, get in ((target, get_json_versions()), (version, get_current_version())):
         with open(file,'w') as f:
             if not get:
@@ -322,7 +326,7 @@ def main():
     global configuration
     options, args, parser = parse_options()
     read_configuration(args[0])
-    if not configuration:
+    if configuration:
         return_code = write_js_versions(args[1])
     else:
         return_code = 1
