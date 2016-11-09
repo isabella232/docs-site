@@ -72,17 +72,12 @@ function build_jsons() {
   return ${warnings}
 }
 
-function build_json_js() {
-  __list=${1:-${TYPES}}
-  build_jsons ${__list}
-}
-
 if [ $# -lt 1 ]; then
   usage
   exit 0
 fi
 
 case "${1}" in
-  all )  build_json_js; exit $?;;
-  *   )  build_json_js ${1}; exit $?;;
+  all )  build_jsons ${TYPES}; exit $?;;
+  *   )  build_jsons ${1}; exit $?;;
 esac
