@@ -19,134 +19,16 @@
 # The resulting version menu is a JavaScript file, placed in the product directory on the web server.
 # The 'version' file is a text file with the current version, placed in the product directory on the web server.
 
-cd $(cd $(dirname ${BASH_SOURCE[0]}); pwd -P)
+__site=$(cd $(cd $(dirname ${BASH_SOURCE[0]}); pwd -P); cd $(pwd -P)/.. ; pwd -P)  # traverse symlinks, etc
+__types=${@:-$(cd "${__site}/configs"; ls -1 | sed -e 's/.txt$//')} # support multiple types
 
-JSON_VERSIONS_JS="json-versions.js"
-SCRIPT=$(basename $0)
-SCRIPT_PATH=$(pwd -P)
-TYPES=$(cd ${SCRIPT_PATH}/../configs; ls -1 | sed -e 's/.txt//')
-TARGET_PATH=$(cd "${SCRIPT_PATH}/../target"; pwd -P)
-WWW_PATH=$(cd "${SCRIPT_PATH}/../www"; pwd -P)
+rm -rf ${__site}/target || ( echo "Could not remove target directory" ; exit 1)
+mkdir ${__site}/target || ( echo "Could not create target directory" ; exit 1)
+cp -R ${__site}/www/* ${__site}/target || ( echo "Could not copy www to target directory" ; exit 1)
 
-function usage() {
-  echo "Building script for support files for documentation."
-  echo
-  echo "Usage: ${SCRIPT} type"
-  echo
-  echo "Where type is one of:"
-  echo
-  echo "test"
-  echo "all"
-  echo "${TYPES}"
-  echo
-  echo "  If 'test' is specified, builds the json-versions.js and version for all of the types,"
-  echo "  outputs them to each type's top-level directory in the target directory, and copies"
-  echo "  sufficient appropriate file(s) that the results can be checked."
-  echo "  Copies files from ${WWW_PATH}"
-  echo "  Intended for manual use by Release Managers so that the config(s) can be tested for accuracy."
-  echo
-  echo "  If 'all' is specified, builds the json-versions.js and version for all of the types,"
-  echo "  and outputs them to each type's top-level directory in the target directory."
-  echo "  Intended for use by Bamboo build plans."
-  echo
-  echo "  If a <type> is specified, builds the json-versions.js and version for that type,"
-  echo "  and outputs them to that type's top-level directory in the target directory."
-  echo
-  echo "  In all cases, the target directory is cleaned first and intermediate directories required are created."
-  echo "  Writes all files to ${TARGET_PATH}"
-  echo
-}
-
-function die() {
-  echo
-  echo "ERROR: ${*}"
-  echo
-  exit 1
-}
-
-function clean_current_from_target() {
-  local warnings
-  for type in ${TYPES}; do
-    local current="${TARGET_PATH}/${type}/current"
-    if [[ -d ${current} ]]; then
-      rm -rf ${current}
-      warnings=$?
-      if [[ ${warnings} -eq 0 ]]; then
-        echo "Cleaned ${current} directory"
-        echo
-      else
-        die "Could not clean ${current} directory"
-      fi
-    fi
-  done
-}
-
-function clean_target() {
-  local warnings
-  rm -rf ${TARGET_PATH}
-  mkdir ${TARGET_PATH}
-  warnings=$?
-  if [[ ${warnings} -eq 0 ]]; then
-    echo "Cleaned ${TARGET_PATH} directory"
-    echo
-  else
-    die "Could not clean ${TARGET_PATH} directory"
-  fi
-}
-
-function copy_www_to_target() {
-  local warnings
-  cp -R ${WWW_PATH}/* ${TARGET_PATH}
-  warnings=$?
-  if [[ ${warnings} -eq 0 ]]; then
-    echo "Copied ${WWW_PATH}/* to ${TARGET_PATH}"
-    echo
-  else
-    die "Could not copy ${WWW_PATH}/* to ${TARGET_PATH}"
-  fi
-}
-
-function build_test() {
-  local warnings
-  clean_target
-  copy_www_to_target
-  _build_json ${TYPES}
-}
-
-function build_jsons() {
-  local warnings
-  if [[ -z ${@} ]]; then
-    die "Type needs to be provided."
-  fi
-  clean_target
-  copy_www_to_target
-  clean_current_from_target
-  _build_json ${@}
-}
-
-function _build_json() {
-  local warnings
-  for type in ${@}; do
-    echo "Building type '${type}'"
-    cd ${SCRIPT_PATH}  
-    python builder.py "${SCRIPT_PATH}/../configs/${type}.txt" "${TARGET_PATH}/${type}/${JSON_VERSIONS_JS}"
-    warnings=$?
-    if [[ ${warnings} -eq 0 ]]; then
-      echo "Wrote '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
-      echo
-    else
-      die "Could not create '${JSON_VERSIONS_JS}' and 'version' file for type '${type}'"
-    fi
-  done
-}
-
-if [ $# -lt 1 ]; then
-  usage
-  exit 0
-fi
-
-case "${1}" in
-  all  )  build_jsons ${TYPES}; exit $?;;
-  test )  build_test ${TYPES}; exit $?;;
-  *    )  build_jsons ${1}; exit $?;;
-esac
+for __type in ${__types}; do
+  python "${__site}/scripts/builder.py" \
+    "${__site}/configs/${__type}.txt" \
+    "${__site}/target/${__type}/json-versions.js" || (
+      echo "Could not create 'json-versions.js' and 'version' file for ${__type}" ; exit 1)
+done

@@ -19,7 +19,7 @@ Top-level directory, to be mapped to the web server.
 
 This is intended for Amazon S3.
 
-These directories are excluded from syncing::
+These directories are to be excluded from syncing::
 
   www/cdap/current
   www/coopr/current
@@ -36,34 +36,27 @@ scripts
 Script used to create the JSON, timeline, and current version from the configuration files
 for these files::
 
-  www/cdap/json-versions.js
-  www/cdap/version
-  www/coopr/json-versions.js
-  www/coopr/version
-  www/tigon/json-versions.js
-  www/tigon/version
+  target/cdap/json-versions.js
+  target/cdap/version
+  target/coopr/json-versions.js
+  target/coopr/version
+  target/tigon/json-versions.js
+  target/tigon/version
 
 Run ``build.sh`` to generate the JSON (for menu and timeline), and update the version
-file, such as::
+file for a specific type, such as::
 
   $ ./build.sh cdap
   
-To generate all JSONs and version files (intended for use by Bamboo build plans) use::
+To generate all JSONs and version files, and copy supporting files, use::
 
-  $ ./build.sh all
-  
-To generate all JSONs and version files, and copy supporting files for manually checking results, use::
-
-  $ ./build.sh test
+  $ ./build.sh
   
 You can then open index files (such as ``target/cdap/index.html`` and ``target/cdap/current/index.html``)
 and check the generated timelines and drop-down version menus.
-  
-For usage::
-
-  $ ./build.sh
 
 The Python script (``builder.py``) is called by ``build.sh`` and actually generates the timeline and version files.
+
 
 Copyright
 =========
