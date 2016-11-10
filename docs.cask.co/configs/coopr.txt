@@ -1,0 +1,44 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright © 2016 Cask Data, Inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+#
+# Coopr documentation staging configuration file
+#
+# Sections: (required, in this order)
+#
+# versions
+# development
+# current
+# older
+#
+# Fields (current and older):
+# directory, label, date released, included in menu (for older only; optional, 0 = False)
+#
+# Lines like these are comments
+
+versions
+http://docs.cask.co/coopr/json-versions.js
+
+development
+# None currently
+
+current
+0.9.9, 0.9.9, 2015-03-09
+
+older
+0.9.8, 0.9.8, 2014-10-15
+0.9.7, 0.9.7, 2014-05-27
+0.9.6, 0.9.6, 2014-04-09
