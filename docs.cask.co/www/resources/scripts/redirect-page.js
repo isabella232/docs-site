@@ -23,16 +23,20 @@
 
 (function() {
   var products = new Array( "cdap", "coopr", "tigon" );
-  var origin = window.location.origin;     //  "http://docs.cask.co"
+  var origin = window.location.origin;     // "http://docs.cask.co"
   var pathname = window.location.pathname; // "/cdap/3.6.0/en/test.html"
   if (pathname[0] == '/') {
     pathname = pathname.substr(1);
   }
   var pathparts = pathname.split( '/' );
-
   if (products.indexOf(pathparts[0]) != -1 && pathparts.length > 1) {
-    var a = new Array(origin, pathparts[0], pathparts[1], 'en/404.html');
-    var url = a.join('/');  
+    var re = /[0-9]\.[0-9]\.[0.9]/;
+    if (pathparts[1].search(re) != -1 ) {
+      var a = new Array(origin, pathparts[0], pathparts[1], 'en/404.html');
+    } else {
+      var a = new Array(origin, pathparts[0], '404.html');
+    }
+    var url = a.join('/');
     if (url) {
       window.location.replace(url);
     }
