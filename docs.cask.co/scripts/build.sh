@@ -32,3 +32,5 @@ for __type in ${__types}; do
     "${__site}/target/www/${__type}/json-versions.js" || (
       echo "Could not create 'json-versions.js' and 'version' file for ${__type}" ; exit 1)
 done
+
+zip -qr ${__site}/target/www.zip ${__site}/target/www/* --exclude *.DS_Store* *.buildinfo*
