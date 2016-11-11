@@ -24,11 +24,11 @@ __types=${@:-$(cd "${__site}/configs"; ls -1 | sed -e 's/.txt$//')} # support mu
 
 rm -rf ${__site}/target || ( echo "Could not remove target directory" ; exit 1)
 mkdir ${__site}/target || ( echo "Could not create target directory" ; exit 1)
-cp -R ${__site}/www/* ${__site}/target || ( echo "Could not copy www to target directory" ; exit 1)
+cp -R ${__site}/www ${__site}/target/www || ( echo "Could not copy www to target directory" ; exit 1)
 
 for __type in ${__types}; do
   python "${__site}/scripts/builder.py" \
     "${__site}/configs/${__type}.txt" \
-    "${__site}/target/${__type}/json-versions.js" || (
+    "${__site}/target/www/${__type}/json-versions.js" || (
       echo "Could not create 'json-versions.js' and 'version' file for ${__type}" ; exit 1)
 done
