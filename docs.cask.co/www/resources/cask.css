@@ -1,11 +1,9 @@
 /*
- * cdap.css_t
+ * cask.css
  * ~~~~~~~~~~~~~~~~~
  *
- * Sphinx stylesheet -- cdap theme.
+ * Sphinx stylesheet -- cask theme.
  *
- * :copyright: Copyright 2007-2013 by the Sphinx team, see AUTHORS.
- * :license: BSD, see LICENSE for details.
  *
  */
 
@@ -69,7 +67,7 @@ background-color: #303840;
     text-shadow: 0px 1px 0 #444;
     font-size: 0.9em;
     width: auto;
-    background-image: url(./doc_logo.png);
+    background-image: url(./cask_logo_horizontal_small.png);
     background-repeat: no-repeat;
     background-position: left middle;
     padding-left: 170px;
