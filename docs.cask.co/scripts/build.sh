@@ -27,13 +27,14 @@ rm -rf ${__site}/target || ( echo "Could not remove target directory" ; exit 1)
 mkdir ${__site}/target || ( echo "Could not create target directory" ; exit 1)
 cp -R ${__site}/www ${__site}/target/www || ( echo "Could not copy www to target directory" ; exit 1)
 
-__types_array=""
 for __type in ${__types}; do
-  __types_array+=", \"${__type}\""
   python "${__site}/scripts/builder.py" \
     "${__site}/configs/${__type}.txt" \
     "${__site}/target/www/${__type}/json-versions.js" || (
       echo "Could not create 'json-versions.js' and 'version' file for ${__type}" ; exit 1)
 done
 
-sed -e "s|TYPE_ARRAY|${__types_array:1}|" "${__site}/www/resources/redirect-page.js" > "${__site}/target/www/resources/redirect-page.js"  || ( echo "Could not rewrite redirect-page.js to target directory" ; exit 1)
+sed -e "s|TYPE_ARRAY|$(echo ${__types} | sed -e 's#^#\"#' -e 's# #\" \"#g' -e 's#$#\"#' -e 's# #, #g')|" "${__site}/www/resources/redirect-page.js" > "${__site}/target/www/resources/redirect-page.js"
+
+[[ ${__ret} -ne 0 ]] && echo "Could not rewrite redirect-page.js to target directory"
+exit ${__ret}
