@@ -35,6 +35,6 @@ for __type in ${__types}; do
 done
 
 sed -e "s|TYPE_ARRAY|$(echo ${__types} | sed -e 's#^#\"#' -e 's# #\" \"#g' -e 's#$#\"#' -e 's# #, #g')|" "${__site}/www/resources/redirect-page.js" > "${__site}/target/www/resources/redirect-page.js"
-
+__ret=$?
 [[ ${__ret} -ne 0 ]] && echo "Could not rewrite redirect-page.js to target directory"
 exit ${__ret}
