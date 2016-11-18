@@ -20,21 +20,27 @@
 # The 'version' file is a text file with the current version, placed in the product directory on the web server.
 # Re-writes the redirect-page.js script to include the types that were used.
 
+function die ( ) {
+  echo ${@}; exit 1;
+}
+
 __site=$(cd $(cd $(dirname ${BASH_SOURCE[0]}); pwd -P); cd $(pwd -P)/.. ; pwd -P)  # traverse symlinks, etc
 __types=${@:-$(cd "${__site}/configs"; ls -1 | sed -e 's/.txt$//')} # support multiple types
 
-rm -rf ${__site}/target || ( echo "Could not remove target directory" ; exit 1)
-mkdir ${__site}/target || ( echo "Could not create target directory" ; exit 1)
-cp -R ${__site}/www ${__site}/target/www || ( echo "Could not copy www to target directory" ; exit 1)
+rm -rf ${__site}/target || die "Could not remove target directory"
+mkdir ${__site}/target || die "Could not create target directory"
+cp -R ${__site}/www ${__site}/target/www || die "Could not copy www to target directory"
 
 for __type in ${__types}; do
   python "${__site}/scripts/builder.py" \
     "${__site}/configs/${__type}.txt" \
-    "${__site}/target/www/${__type}/json-versions.js" || (
-      echo "Could not create 'json-versions.js' and 'version' file for ${__type}" ; exit 1)
+    "${__site}/target/www/${__type}/json-versions.js" \
+    || die "Could not create 'json-versions.js' and 'version' file for ${__type}"
 done
 
-sed -e "s|TYPE_ARRAY|$(echo ${__types} | sed -e 's#^#\"#' -e 's# #\" \"#g' -e 's#$#\"#' -e 's# #, #g')|" "${__site}/www/resources/redirect-page.js" > "${__site}/target/www/resources/redirect-page.js"
+sed -e "s|TYPE_ARRAY|$(echo ${__types} | sed -e 's#^#\"#' -e 's# #\" \"#g' -e 's#$#\"#' -e 's# #, #g')|" \
+  "${__site}/www/resources/redirect-page.js" \
+  > "${__site}/target/www/resources/redirect-page.js"
 __ret=$?
 [[ ${__ret} -ne 0 ]] && echo "Could not rewrite redirect-page.js to target directory"
 exit ${__ret}
