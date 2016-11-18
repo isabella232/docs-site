@@ -30,6 +30,8 @@ as they are copies used to test the menus when the configuration file has been g
 The build script (see below) copies the contents of ``www`` to the ``target`` directory when
 it is run.
 
+**Note:** Due to https://jira.atlassian.com/browse/BAM-18015, we do not use any sub-directories
+in the ``resources`` directory.
 
 scripts
 =======
