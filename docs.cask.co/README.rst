@@ -30,9 +30,6 @@ as they are copies used to test the menus when the configuration file has been g
 The build script (see below) copies the contents of ``www`` to the ``target`` directory when
 it is run.
 
-**Note:** Due to https://jira.atlassian.com/browse/BAM-18015, we do not use any sub-directories
-in the ``resources`` directory.
-
 scripts
 =======
 Script used to create the JSON, timeline, and current version from the configuration files
@@ -62,7 +59,7 @@ The Python script (``builder.py``) is called by ``build.sh`` and actually genera
 
 Copyright
 =========
-Copyright © 2016 Cask Data, Inc.
+Copyright © 2016-2017 Cask Data, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
