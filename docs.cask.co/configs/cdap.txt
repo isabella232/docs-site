@@ -25,7 +25,7 @@
 # older
 #
 # Fields (current and older):
-# directory, label, date released, included in menu (for older only; optional, 0 = False)
+# directory, label, date released, included in menu (1 = True, 0 = False), Google Custom Search Engine ID
 #
 # Lines like these are comments
 
@@ -33,10 +33,10 @@ versions
 http://docs.cask.co/cdap/json-versions.js
 
 development
-4.1.0-SNAPSHOT, 4.1.0
+4.1.0-SNAPSHOT, 4.1.0, '', 1, 002451258715120217843:v_9tcw7mwb0
 
 current
-4.0.0, 4.0.0, 2016-12-20
+4.0.0, 4.0.0, 2016-12-20, 1, 002451258715120217843:nkzqh6x__gy
 
 older
 3.6.0, 3.6.0, 2016-10-05
