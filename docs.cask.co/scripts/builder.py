@@ -17,7 +17,7 @@
 
 # builder.py to create JSON file
 
-# version 0.4
+# version 0.5
 
 # JSON Creation (json-versions.js)
 # Creates a JSON file with timeline and formatting information from the data in a 
@@ -50,7 +50,9 @@ def _build_timeline():
     """Takes a dictionary ('versions_data') from a global variable ('configuration')
     and creates a timeline in a JSON file.
     
-    versions_data is a dictionary. 
+    "versions_data" is a dictionary.
+    
+    "gcse" is a dictionary of Google Custom Search Engines, keyed by the version associated with the Search Engine.
     
     This modifies the "older", adding an extra element ('1') to flag the highest version(s) of the minor index.
     To be backward-compatible with older documentation sets, the "included-in-menu" field moves to index 4:
@@ -58,7 +60,12 @@ def _build_timeline():
     ['2.7.1', '2.7.1', '2015-02-05', '1', '0']
     
     "versions_data":
-    { "development": [
+    { 
+      "gcse": {
+        "4.1.0-SNAPSHOT": "002451258715120217843:v_9tcw7mwb0", 
+        "4.0.0": "002451258715120217843:nkzqh6x__gy", 
+        }, 
+      "development": [
         ['3.1.0-SNAPSHOT', '3.1.0'], 
         ], 
       "current": ['3.0.1', '3.0.0', '2015-05-07'], 
@@ -76,7 +83,7 @@ def _build_timeline():
         ],
     },
 
-    timeline is a list of lists. The first item of each inner list is the indentation of the inner list, with 0 being
+    "timeline" is a list of lists. The first item of each inner list is the indentation of the inner list, with 0 being
     far-left, and increasing by 1. It is the same as the "older", but re-arranged into a hierarchy:
 
     'timeline': [
@@ -273,10 +280,12 @@ def read_configuration(config_file_path):
         { 'development': [], 
           'current': [],
           'older': [],
+          'gcse': { },
         },
     }
     sections = ['versions', 'development', 'current', 'older']
     section = None
+    gcse_dict = dict()
     if os.path.isfile(config_file_path):
         with open(config_file_path,'r') as f:
             for line in f:
@@ -288,20 +297,30 @@ def read_configuration(config_file_path):
                         continue
                     elif section == 'versions':
                         configuration[section] = line
-                    elif section == 'current':
-                         configuration['versions_data'][section] = converted_line(line)
                     else:
-                        # In part of 'versions_data'
-                         configuration['versions_data'][section].append(converted_line(line))
+                        line_list, gcse = converted_line(line)
+                        if section == 'current':
+                             configuration['versions_data'][section] = line_list
+                        else:
+                             # In part of 'versions_data'
+                             configuration['versions_data'][section].append(line_list)
+                        if gcse and line_list[1]:
+                            gcse_dict[line_list[1]] = gcse
                 elif line.startswith('#') or not line:
                     section = None
+        if gcse_dict:
+            configuration['versions_data']['gcse'] = gcse_dict
     else:
         print "Did not find %s" % config_file_path
         configuration = None
 
 def converted_line(line):
-    line = line.replace(' ', '')
-    return line.split(',')
+    line_list = line.replace(' ', '').split(',')
+    if len(line_list) > 4:
+        gcse = line_list[4]
+    else:
+        gcse = ''
+    return line_list[0:4], gcse
 
 def write_js_versions(target):
     target_dir = os.path.dirname(target)
