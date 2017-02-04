@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2015-2016 Cask Data, Inc.
+# Copyright © 2015-2017 Cask Data, Inc.
 # 
 # Licensed under the Apache License, Version 2.0 (the 'License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -17,11 +17,15 @@
 
 # builder.py to create JSON file
 
-# version 0.5
+# version 0.6
 
 # JSON Creation (json-versions.js)
 # Creates a JSON file with timeline and formatting information from the data in a 
 # supplied configuration file.
+#
+# Writes out the current version to a file "VERSION" and 
+# the last development version to a file "DEVELOPMENT"
+
 
 import os
 import sys
@@ -241,12 +245,26 @@ def diff_between_date_strings(date_a, date_b):
 def get_current_version():
     global configuration
     current_version = None
-    if 'versions_data' in configuration:
-        versions_data = configuration['versions_data']
-        if 'current' in versions_data and len(versions_data['current']) > 0:
-            return "%s\n" % versions_data['current'][0]
-    else:
-        return None
+    try:
+        if 'versions_data' in configuration:
+            versions_data = configuration['versions_data']
+            if 'current' in versions_data and versions_data['current'][0]:
+                current_version = "%s\n" % versions_data['current'][0]
+    except Exception, e:
+        pass
+    return current_version
+
+def get_develop_version():
+    global configuration
+    develop_version = None
+    try:
+        if 'versions_data' in configuration:
+            versions_data = configuration['versions_data']
+            if 'development' in versions_data and versions_data['development'][-1][0]:
+                develop_version = "%s\n" % versions_data['development'][-1][0]
+    except Exception, e:
+        pass
+    return develop_version
 
 def print_current_version():
     print get_current_version()
@@ -323,8 +341,14 @@ def converted_line(line):
     return line_list[0:4], gcse
 
 def write_js_versions(target):
+    files = []
     target_dir = os.path.dirname(target)
-    version = os.path.join(target_dir, 'version')
+    if get_json_versions():
+        files.append((target, get_json_versions()))
+    if get_current_version():
+        files.append((os.path.join(target_dir, 'version'), get_current_version()))
+    if get_develop_version():
+        files.append((os.path.join(target_dir, 'develop'), get_develop_version()))
     if not os.path.exists(target_dir):
         try:
             os.makedirs(target_dir)
@@ -332,7 +356,7 @@ def write_js_versions(target):
         except Exception, e:
             print "Could not write to %s" % target_dir
             raise e
-    for file, get in ((target, get_json_versions()), (version, get_current_version())):
+    for file, get in files:
         with open(file,'w') as f:
             if not get:
                 return 1
