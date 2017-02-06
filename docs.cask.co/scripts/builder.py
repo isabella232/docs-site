@@ -23,8 +23,8 @@
 # Creates a JSON file with timeline and formatting information from the data in a 
 # supplied configuration file.
 #
-# Writes out the current version to a file "VERSION" and 
-# the last development version to a file "DEVELOPMENT"
+# Writes out the current version to a file "version" and 
+# the last development version to a file "develop"
 
 
 import os
@@ -345,10 +345,12 @@ def write_js_versions(target):
     target_dir = os.path.dirname(target)
     if get_json_versions():
         files.append((target, get_json_versions()))
-    if get_current_version():
-        files.append((os.path.join(target_dir, 'version'), get_current_version()))
-    if get_develop_version():
-        files.append((os.path.join(target_dir, 'develop'), get_develop_version()))
+    version = get_current_version()
+    if version:
+        files.append((os.path.join(target_dir, 'version'), version))
+    develop = get_develop_version()
+    if develop:
+        files.append((os.path.join(target_dir, 'develop'), develop))
     if not os.path.exists(target_dir):
         try:
             os.makedirs(target_dir)
