@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright © 2016 Cask Data, Inc.
+# Copyright © 2016-2017 Cask Data, Inc.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@
 # The 'version' file is a text file with the current version, placed in the product directory on the web server.
 # Re-writes the redirect-page.js script to include the types that were used.
 
-function die ( ) {
+function die() {
   echo ${@}; exit 1;
 }
 
