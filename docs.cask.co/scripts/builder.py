@@ -24,7 +24,7 @@
 # supplied configuration file.
 #
 # Writes out the current version to a file "version" and 
-# the last development version to a file "develop"
+# the last development version to a file "development"
 
 
 import os
@@ -254,17 +254,17 @@ def get_current_version():
         pass
     return current_version
 
-def get_develop_version():
+def get_development_version():
     global configuration
-    develop_version = None
+    development_version = None
     try:
         if 'versions_data' in configuration:
             versions_data = configuration['versions_data']
             if 'development' in versions_data and versions_data['development'][-1][0]:
-                develop_version = "%s\n" % versions_data['development'][-1][0]
+                development_version = "%s\n" % versions_data['development'][-1][0]
     except Exception, e:
         pass
-    return develop_version
+    return development_version
 
 def print_current_version():
     print get_current_version()
@@ -348,9 +348,9 @@ def write_js_versions(target):
     version = get_current_version()
     if version:
         files.append((os.path.join(target_dir, 'version'), version))
-    develop = get_develop_version()
-    if develop:
-        files.append((os.path.join(target_dir, 'develop'), develop))
+    development = get_development_version()
+    if development:
+        files.append((os.path.join(target_dir, 'development'), development))
     if not os.path.exists(target_dir):
         try:
             os.makedirs(target_dir)
