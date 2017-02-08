@@ -14,10 +14,17 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# Calls a Python script that builds a version menu ('json-versions.js') and 'version' file from a configuration file.
+# Calls a Python script that builds from a configuration file:
+# a version menu ('json-versions.js')
+# a 'version' file
+# a 'development' file
+#
 # The configuration file is specific for the product (cdap, coopr, tigon).
 # The resulting version menu is a JavaScript file, placed in the product directory on the web server.
 # The 'version' file is a text file with the current version, placed in the product directory on the web server.
+# The 'development' file is a text file with the development version (lowest SNAPSHOT version), 
+# placed in the product directory on the web server.
+#
 # Re-writes the redirect-page.js script to include the types that were used.
 
 function die() {
