@@ -17,15 +17,15 @@
 #
 # CDAP documentation staging configuration file
 #
-# Sections: (required, in this order)
+# Sections (required, in this order):
 #
 # versions
 # development
 # current
 # older
 #
-# Fields (current and older):
-# directory, label, date released, included in menu (1 = True, 0 = False), Google Custom Search Engine ID
+# Fields:
+# directory, label, date released YYYY-MM-DD, included-in-menu (1 = True, 0 = False), Google Custom Search Engine ID
 #
 # Lines like these are comments
 

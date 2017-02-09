@@ -54,15 +54,42 @@ def _build_timeline():
     """Takes a dictionary ('versions_data') from a global variable ('configuration')
     and creates a timeline in a JSON file.
     
-    "versions_data" is a dictionary.
+    "versions_data" is a dictionary, composed of "gcse", "development", "current", and "older"
     
     "gcse" is a dictionary of Google Custom Search Engines, keyed by the version associated with the Search Engine.
     
-    This modifies the "older", adding an extra element ('1') to flag the highest version(s) of the minor index.
-    To be backward-compatible with older documentation sets, the "included-in-menu" field moves to index 4:
+    "development" and "older" are lists of lists; "current" is a list. 
     
-    ['2.7.1', '2.7.1', '2015-02-05', '1', '0']
+    The lists are composed of entries describing the release, using these elements:
+        0: Full version (including SNAPSHOT)
+        1: Display version (without SNAPSHOT)
+        2: Release date YYYY-MM-DD
+        3: Flag for "bold-in-list" and "included-in-menu
+    or
+        0: Full version (including SNAPSHOT)
+        1: Display version (without SNAPSHOT)
+        2: Release date YYYY-MM-DD
+        3: Flag for "bold-in-list"
+        4: Flag for "not-included-in-menu" 
+
+    Such as (showing backward-compatible older versions):
+        ['2.8.0', '2.8.0', '2015-03-23', ''],       # Shows normal, not in menu
+        ['2.7.1', '2.7.1', '2015-02-05', '1', '0'], # Shows bold, not in menu
+        ['2.6.3', '2.6.3', '2015-05-20', '1', '0'], # Shows bold, not in menu 
+        ['2.6.2', '2.6.2', '2015-03-23', '', '0'],  # Shows normal, not in menu
     
+    This method modifies the "older" lists, setting element[3] ('1') to flag the highest version(s) of the minor index.
+    This is only to be added if the menu item has not been disabled.
+    To be backward-compatible with older documentation sets, the "not-included-in-menu" flag moves to index 4.
+
+    The menu's Javascript code includes:
+        If list[3] == 1 and either (len(list) == 4) or (len(list) > 4 and list[4] != 0): then the item shows in the menu
+    
+    If list[3] == 1 : that item appears in bold in the "Older Releases" section of the web page
+        if there are 5 or more items in the list, the item does not appear in the menu
+        if there are 4 items in the list, the item does appear in the menu
+    If list[3] == 0 : that item appears in normal weight in the "Older Releases" section of the web page    
+      
     "versions_data":
     { 
       "gcse": {
@@ -87,6 +114,9 @@ def _build_timeline():
         ],
     },
 
+        ['3.5.1', '3.5.1', '2016-09-14', '1'],
+        ['3.5.0', '3.5.0', '2016-08-22', ''],
+
     "timeline" is a list of lists. The first item of each inner list is the indentation of the inner list, with 0 being
     far-left, and increasing by 1. It is the same as the "older", but re-arranged into a hierarchy:
 
@@ -105,8 +135,8 @@ def _build_timeline():
     
     """
     global configuration
-
-    versions_data = configuration['versions_data']
+    import copy
+    versions_data = copy.deepcopy(configuration['versions_data'])
     older = versions_data['older']
     rev_older = list(older)
     rev_older.insert(0, versions_data['current'])
@@ -124,6 +154,7 @@ def _build_timeline():
     releases = len(older)
     for i in range(0, releases):
         style = ''
+        included = True
         version = older[i][0]
         version_major_minor = version[:version.rfind('.')]
         if i < (releases-1):
@@ -298,7 +329,7 @@ def read_configuration(config_file_path):
         { 'development': [], 
           'current': [],
           'older': [],
-          'gcse': { },
+          'gcse': {},
         },
     }
     sections = ['versions', 'development', 'current', 'older']
@@ -334,6 +365,8 @@ def read_configuration(config_file_path):
 
 def converted_line(line):
     line_list = line.replace(' ', '').split(',')
+    if line_list[2] == "''":
+        line_list[2] = ''
     if len(line_list) > 4:
         gcse = line_list[4]
     else:
