@@ -34,7 +34,7 @@ http://docs.cask.co/cdap/json-versions.js
 
 development
 4.2.0-SNAPSHOT, 4.2.0, '', 1, 002451258715120217843:v_9tcw7mwb0
-4.1.0-SNAPSHOT, 4.1.0, '', 1, 002451258715120217843:v_9tcw7mwb0
+4.1.0-SNAPSHOT, 4.1.0, '', 1, 002451258715120217843:nkzqh6x__gy
 
 current
 4.0.1, 4.0.1, 2017-01-24, 1, 002451258715120217843:nkzqh6x__gy
