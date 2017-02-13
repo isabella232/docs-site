@@ -4,7 +4,7 @@
  *
  * JavaScript for replacing the table of contents with another one 
  *
- * :copyright: © Copyright 2015 Cask Data, Inc.
+ * :copyright: © Copyright 2015-2017 Cask Data, Inc.
  * :license: Apache License, Version 2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,6 +39,9 @@
       });
       $("#loadedCurrentReleaseMenu").find("h3").each(function() {
           this.innerHTML = this.innerHTML + " (Current&nbsp;Release)";
+          $(this).find("a").each(function() {
+              this.href = "current/en/" + $(this).attr("href");
+          });
       });
   });
 })();
