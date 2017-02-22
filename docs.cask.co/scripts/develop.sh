@@ -25,7 +25,7 @@ function die() {
 
 __site=$(cd $(cd $(dirname ${BASH_SOURCE[0]}); pwd -P); cd $(pwd -P)/.. ; pwd -P)  # traverse symlinks, etc
 
-cp -R ${__site}/www_develop/cdap/2.7.1 ${__site}/target/www/cdap/2.7.1 || die "Could not copy www_develop/cdap/2.7.1 to target directory"
+cp -R ${__site}/www_develop/cdap/* ${__site}/target/www/cdap || die "Could not copy www_develop/cdap/* to target directory"
 cp ${__site}/www_develop/htaccess  ${__site}/target/www/.htaccess || die "Could not copy www_develop/htaccess to target/www/.htaccess"
 
 echo "Copied development files www/cdap/2.7.1 and www/.htaccess"
