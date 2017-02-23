@@ -39,10 +39,12 @@
       var a = new Array(origin, pathparts[0], '404.html');
     }
     var url = a.join('/');
-    if (url && url != window.location.href) {
-      window.location.replace(url);
-    } else {
-      console.log("redirect-page.js: reached the same location: " + url);
+    if (url) {
+      if (url != window.location.href) {
+        window.location.replace(url);
+      } else {
+        console.log("redirect-page.js: reached the same location: " + url);
+      }
     }
   }
 })();
