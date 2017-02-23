@@ -28,4 +28,4 @@ __site=$(cd $(cd $(dirname ${BASH_SOURCE[0]}); pwd -P); cd $(pwd -P)/.. ; pwd -P
 cp -R ${__site}/www_develop/cdap/* ${__site}/target/www/cdap || die "Could not copy www_develop/cdap/* to target directory"
 cp ${__site}/www_develop/htaccess  ${__site}/target/www/.htaccess || die "Could not copy www_develop/htaccess to target/www/.htaccess"
 
-echo "Copied development files www/cdap/2.7.1 and www/.htaccess"
+echo "Copied development files from /www_develop/cdap/* to target/www/cdap and created www/.htaccess"
