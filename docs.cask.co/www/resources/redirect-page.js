@@ -1,6 +1,6 @@
 /*
  * redirect-page.js
- * ----------------------------
+ * ----------------
  *
  * JavaScript for redirecting to an appropriate lower-level 404 page
  *
@@ -18,6 +18,8 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
+ *
+ * version 0.2
  * 
  */
 
@@ -38,7 +40,11 @@
     }
     var url = a.join('/');
     if (url) {
-      window.location.replace(url);
+      if (url != window.location.href) {
+        window.location.replace(url);
+      } else {
+        console.log("redirect-page.js: reached the same location: " + url);
+      }
     }
   }
 })();
