@@ -170,7 +170,8 @@ def _build_timeline():
         if len(older[i]) > 3:
             included = older[i].pop()
             older[i].append(style)
-            older[i].append(included)
+            if not bool(included):
+                older[i].append(included)
         else:
             older[i].append(style)
         
