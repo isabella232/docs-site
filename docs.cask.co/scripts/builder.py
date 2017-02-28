@@ -17,7 +17,7 @@
 
 # builder.py to create JSON file
 
-# version 0.6
+# version 0.61
 
 # JSON Creation (json-versions.js)
 # Creates a JSON file with timeline and formatting information from the data in a 
@@ -39,20 +39,21 @@ def parse_options():
 
     parser = OptionParser(
         usage="%prog config target",
-        description='Builds a timeline and menu in Javascript format for a web page.')
+        description="Builds a timeline and menu in Javascript format, and writes a JavaScript file ('target' file), " + 
+            "a 'version' file, and (optionally) a 'development' file, for a Cask documentation web page.")
 
     (options, args) = parser.parse_args()
     
     if len(args) < 2:
         parser.print_help()
-        print "A 'config' and a 'target' must be supplied."
+        print "A 'config file' and a 'target file' must be supplied."
         sys.exit(1)
                 
     return options, args, parser
 
 def _build_timeline():
-    """Takes a dictionary ('versions_data') from a global variable ('configuration')
-    and creates a timeline in a JSON file.
+    """Takes a dictionary ('versions_data') from a global variable ('configuration'), makes a deep copy of it,
+    builds a timeline and adds it to the dictionary, and then returns the copy.
     
     "versions_data" is a dictionary, composed of "gcse", "development", "current", and "older"
     
@@ -64,7 +65,7 @@ def _build_timeline():
         0: Full version (including SNAPSHOT)
         1: Display version (without SNAPSHOT)
         2: Release date YYYY-MM-DD
-        3: Flag for "bold-in-list" and "included-in-menu
+        3: Flag for "bold-in-list" and "included-in-menu"
     or
         0: Full version (including SNAPSHOT)
         1: Display version (without SNAPSHOT)
@@ -73,10 +74,13 @@ def _build_timeline():
         4: Flag for "not-included-in-menu" 
 
     Such as (showing backward-compatible older versions):
+        ['2.8.3', '2.8.3', '2016-01-25', '1'],      # Shows bold,   in menu
+        ['2.8.2', '2.8.2', '2015-07-14', ''],       # Shows normal, not in menu
+        ['2.8.1', '2.8.1', '2015-07-13', ''],       # Shows normal, not in menu
         ['2.8.0', '2.8.0', '2015-03-23', ''],       # Shows normal, not in menu
-        ['2.7.1', '2.7.1', '2015-02-05', '1', '0'], # Shows bold, not in menu
-        ['2.6.3', '2.6.3', '2015-05-20', '1', '0'], # Shows bold, not in menu 
-        ['2.6.2', '2.6.2', '2015-03-23', '', '0'],  # Shows normal, not in menu
+        ['2.7.1', '2.7.1', '2015-02-05', '1', '0'], # Shows bold,   not in menu
+        ['2.6.3', '2.6.3', '2015-05-20', '1', '0'], # Shows bold,   not in menu 
+        ['2.6.2', '2.6.2', '2015-03-23', '',  '0'], # Shows normal, not in menu
     
     This method modifies the "older" lists, setting element[3] ('1') to flag the highest version(s) of the minor index.
     This is only to be added if the menu item has not been disabled.
@@ -170,7 +174,8 @@ def _build_timeline():
         if len(older[i]) > 3:
             included = older[i].pop()
             older[i].append(style)
-            older[i].append(included)
+            if not bool(included):
+                older[i].append(included)
         else:
             older[i].append(style)
         
@@ -319,8 +324,8 @@ def print_json_versions_file():
     head, tail = os.path.split(configuration['versions'])
     print tail
 
-def read_configuration(config_file_path):
-    """Reads a configuration file and generates a configuration dictionary from it."""
+def read_configuration_file(config_file_path):
+    """Reads a configuration file and generates the global configuration dictionary from it."""
     global configuration
     print "Reading configuration file %s" % config_file_path
     configuration = {
@@ -349,10 +354,10 @@ def read_configuration(config_file_path):
                     else:
                         line_list, gcse = converted_line(line)
                         if section == 'current':
-                             configuration['versions_data'][section] = line_list
+                            configuration['versions_data'][section] = line_list
                         else:
-                             # In part of 'versions_data'
-                             configuration['versions_data'][section].append(line_list)
+                            # In part of 'versions_data'
+                            configuration['versions_data'][section].append(line_list)
                         if gcse and line_list[1]:
                             gcse_dict[line_list[1]] = gcse
                 elif line.startswith('#') or not line:
@@ -364,6 +369,9 @@ def read_configuration(config_file_path):
         configuration = None
 
 def converted_line(line):
+    """Takes a line from the configuration file and returns 
+    a 'line_list' (version, version label, release date, included-in-menu flag) and
+    a Google Compute Search Engine, if found"""
     line_list = line.replace(' ', '').split(',')
     if line_list[2] == "''":
         line_list[2] = ''
@@ -371,9 +379,9 @@ def converted_line(line):
         gcse = line_list[4]
     else:
         gcse = ''
-    return line_list[0:4], gcse
+    return line_list[:4], gcse
 
-def write_js_versions(target):
+def write_files(target):
     files = []
     target_dir = os.path.dirname(target)
     if get_json_versions():
@@ -403,9 +411,9 @@ def main():
     """
     global configuration
     options, args, parser = parse_options()
-    read_configuration(args[0])
+    read_configuration_file(args[0])
     if configuration:
-        return_code = write_js_versions(args[1])
+        return_code = write_files(args[1])
     else:
         return_code = 1
     sys.exit(return_code)
