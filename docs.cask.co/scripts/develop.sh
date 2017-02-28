@@ -26,7 +26,7 @@ function copy_dirs() {
   target_dir=$2
   source_dir=`cat ${__site}/target/www/cdap/${source_file}`
   rm -rf ${__site}/target/www/cdap/${target_dir}
-  cp -R ${__site}/www_develop/cdap/${source_dir} ${__site}/target/www/cdap/${target_dir} || die "Could not copy ${source_dir} to '${target_dir}'"
+  cp -R ${__site}/www_develop/cdap/${source_dir} ${__site}/target/www/cdap/${target_dir} || die "Could not copy ${source_dir} to ${target_dir}"
 }
 
 ./build.sh
