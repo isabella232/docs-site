@@ -15,9 +15,9 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# builder.py to create JSON file
+# builder.py to create JSON and sitemap_index.xml file
 
-# version 0.6
+# version 0.7
 
 # JSON Creation (json-versions.js)
 # Creates a JSON file with timeline and formatting information from the data in a 
@@ -33,19 +33,30 @@ from datetime import datetime
 from optparse import OptionParser
 
 
+SITEMAP_INDEX_XML_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+%s</sitemapindex>
+"""
+
+SITEMAP_TEMPLATE = """<sitemap>
+  <loc>%s</loc>
+</sitemap>
+"""
+
+
 def parse_options():
     """ Parses args options.
     """
 
     parser = OptionParser(
-        usage="%prog config target",
-        description='Builds a timeline and menu in Javascript format for a web page.')
+        usage="%prog config target sitemap_index_xml type",
+        description='Builds a timeline and menu in Javascript format for a web page and a sitemap_index.xml file.')
 
     (options, args) = parser.parse_args()
     
-    if len(args) < 2:
+    if len(args) < 4:
         parser.print_help()
-        print "A 'config' and a 'target' must be supplied."
+        print "A 'config', 'target', a 'sitemap_index_xml', and a 'type' must be supplied."
         sys.exit(1)
                 
     return options, args, parser
@@ -398,7 +409,46 @@ def write_js_versions(target):
                 return 1
             f.write(get)
             print "Wrote to %s" % file
+
+def write_sitemap_index_xml(target, type):
+    sitemap = []
+    versions_data = _build_timeline()
+    try:
+        c = versions_data['current']
+        sitemap.append(c[0])
+    except KeyError:
+        print "Unable to find versions_data['current']"
     
+    for subtype in ('development', 'older'):
+        try:
+            for s in versions_data[subtype]:
+                if s[3] == '1':
+                    sitemap.append(s[0])
+        except KeyError:
+            print "Unable to find versions_data[subtype]"       
+    
+    target_dir = os.path.dirname(target)
+    if not os.path.exists(target_dir):
+        try:
+            os.makedirs(target_dir)
+            print "Created %s" % target_dir
+        except Exception, e:
+            print "Could not write to %s" % target_dir
+            raise e
+
+    with open(target,'w') as f:
+        if not sitemap:
+            return 1
+        
+        sitemap_urls = ''
+        for version in sitemap:
+            sitemap_urls += SITEMAP_TEMPLATE % ("http://docs.cask.co/%s/%s/sitemap.xml" % (type, version))
+        sitemap_xml = SITEMAP_INDEX_XML_TEMPLATE % sitemap_urls
+
+        f.write(sitemap_xml)
+        print "Wrote to %s" % target
+
+
 def main():
     """ Main program entry point.
     """
@@ -407,6 +457,8 @@ def main():
     read_configuration(args[0])
     if configuration:
         return_code = write_js_versions(args[1])
+        if not return_code:
+            return_code = write_sitemap_index_xml(args[2], args[3])
     else:
         return_code = 1
     sys.exit(return_code)

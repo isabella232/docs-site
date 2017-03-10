@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <sitemap>
+      <loc>http://docs.cask.co/sitemap_cdap_index.xml</loc>
+   </sitemap>
+
+   <sitemap>
+      <loc>http://docs.cask.co/sitemap_coopr_index.xml</loc>
+   </sitemap>
+
+   <sitemap>
+      <loc>http://docs.cask.co/sitemap_tigon_index.xml</loc>
+   </sitemap>
+</sitemapindex>
