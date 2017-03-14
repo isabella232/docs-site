@@ -402,7 +402,7 @@ def write_js_versions(target):
             print "Created %s" % target_dir
         except Exception, e:
             print "Could not write to %s" % target_dir
-            raise e
+            return 1
     for file, get in files:
         with open(file,'w') as f:
             if not get:
@@ -434,7 +434,7 @@ def write_sitemap_index_xml(target, type):
             print "Created %s" % target_dir
         except Exception, e:
             print "Could not write to %s" % target_dir
-            raise e
+            return 1
 
     with open(target,'w') as f:
         if not sitemap:
