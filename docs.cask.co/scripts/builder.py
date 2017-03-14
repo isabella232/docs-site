@@ -402,7 +402,8 @@ def write_js_versions(target):
             print "Created %s" % target_dir
         except Exception, e:
             print "Could not write to %s" % target_dir
-            return 1
+            raise e
+
     for file, get in files:
         with open(file,'w') as f:
             if not get:
@@ -434,7 +435,7 @@ def write_sitemap_index_xml(target, type):
             print "Created %s" % target_dir
         except Exception, e:
             print "Could not write to %s" % target_dir
-            return 1
+            raise e
 
     with open(target,'w') as f:
         if not sitemap:
@@ -455,12 +456,17 @@ def main():
     global configuration
     options, args, parser = parse_options()
     read_configuration(args[0])
-    if configuration:
-        return_code = write_js_versions(args[1])
-        if not return_code:
-            return_code = write_sitemap_index_xml(args[2], args[3])
-    else:
+    try:
+        if configuration:
+            return_code = write_js_versions(args[1])
+            if not return_code:
+                return_code = write_sitemap_index_xml(args[2], args[3])
+        else:
+            return_code = 1
+    except Exception, e:
+        print "Got exception: %s" % e
         return_code = 1
+        
     sys.exit(return_code)
         
 if __name__ == '__main__':
