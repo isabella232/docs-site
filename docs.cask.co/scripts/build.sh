@@ -18,12 +18,14 @@
 # a version menu ('json-versions.js')
 # a 'version' file
 # a 'development' file
+# a 'sitemap_{type}_index.xml' file
 #
 # The configuration file is specific for the product (cdap, coopr, tigon).
 # The resulting version menu is a JavaScript file, placed in the product directory on the web server.
 # The 'version' file is a text file with the current version, placed in the product directory on the web server.
 # The 'development' file is a text file with the development version (lowest SNAPSHOT version), 
 # placed in the product directory on the web server.
+# The sitemap_{type}_index.xml file is an sitemap index file that points to all lower-level sitemap.xml files.
 #
 # Re-writes the redirect-page.js script to include the types that were used.
 
@@ -42,6 +44,8 @@ for __type in ${__types}; do
   python "${__site}/scripts/builder.py" \
     "${__site}/configs/${__type}.txt" \
     "${__site}/target/www/${__type}/json-versions.js" \
+    "${__site}/target/www/sitemap_${__type}_index.xml" \
+    "${__type}" \
     || die "Could not create 'json-versions.js' and 'version' file for ${__type}"
 done
 
