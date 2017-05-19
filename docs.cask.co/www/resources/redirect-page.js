@@ -25,7 +25,7 @@
 
 (function() {
   var products = new Array( TYPE_ARRAY );
-  var origin = window.location.origin;     // "http://docs.cask.co"
+  var origin = window.location.origin;     // "//docs.cask.co"
   var pathname = window.location.pathname; // "/cdap/3.6.0/en/test.html"
   if (pathname[0] == '/') {
     pathname = pathname.substr(1);

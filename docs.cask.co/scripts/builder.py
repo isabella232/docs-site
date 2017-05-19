@@ -443,7 +443,7 @@ def write_sitemap_index_xml(target, type):
         
         sitemap_urls = ''
         for version in sitemap:
-            sitemap_urls += SITEMAP_TEMPLATE % ("http://docs.cask.co/%s/%s/sitemap.xml" % (type, version))
+            sitemap_urls += SITEMAP_TEMPLATE % ("//docs.cask.co/%s/%s/sitemap.xml" % (type, version))
         sitemap_xml = SITEMAP_INDEX_XML_TEMPLATE % sitemap_urls
 
         f.write(sitemap_xml)

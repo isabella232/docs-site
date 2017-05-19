@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /training/
 Disallow: /tutorial/
 
-Sitemap: http://docs.cask.co/sitemap_index.xml
+Sitemap: /sitemap_index.xml

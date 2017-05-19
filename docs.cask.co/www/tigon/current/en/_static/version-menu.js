@@ -19,7 +19,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  * 
- * Requires a JSONP file at http://docs.cask.co/cdap/json-versions.js in the format:
+ * Requires a JSONP file at docs.cask.co/cdap/json-versions.js in the format:
  * 
  * versionscallback({'development': [['3.5.0-SNAPSHOT', '3.5.0']], 'current': ['3.4.1', '3.4.1', '2016-05-12'], 'timeline': [['0', '3.4.0', '2016-04-29', ' (100 days)'], ['1', '3.4.1', '2016-05-12', ' (13 days)'], ['0', '3.3.0', '2016-01-20', ' (119 days)'], ['1', '3.3.1', '2016-02-19', ' (30 days)'], ['1', '3.3.2', '2016-03-07', ' (17 days)'], ['1', '3.3.3', '2016-04-15', ' (39 days)'], ['1', '3.3.4', '2016-05-19', ' (34 days)'], ['0', '3.2.0', '2015-09-23', ' (51 days)'], ['1', '3.2.1', '2015-10-21', ' (28 days)'], ... ['2.6.0', '2.6.0', '2015-01-10', '']]});
  * 
@@ -30,7 +30,7 @@
  */
 
 (function() {
-  var versionsURL = 'http://docs.cask.co/cdap/';
+  var versionsURL = '//docs.cask.co/cdap/';
   var versionID = 'select-version';
   var buildURL = (function(dir){
     return versionsURL + dir + '/en/';
