@@ -30,7 +30,7 @@
 # Lines like these are comments
 
 versions
-http://docs.cask.co/tigon/json-versions.js
+//docs.cask.co/tigon/json-versions.js
 
 development
 # None currently
