@@ -33,7 +33,7 @@ versions
 //docs.cask.co/cdap/json-versions.js
 
 development
-4.3.0-SNAPSHOT, 4.3.0, '', 1, 002451258715120217843:6jye64lrjyq
+4.3.0-SNAPSHOT, 4.3.0, '', 
 
 current
 # GCSEI for current          002451258715120217843:nkzqh6x__gy
