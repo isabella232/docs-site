@@ -25,7 +25,7 @@
 # older
 #
 # Fields:
-# directory, label, date released YYYY-MM-DD, included-in-menu (1 = True, 0 = False, 
+# directory, label, date released YYYY-MM-DD, included-in-menu (1 = True, 0 = False,
 # most recent minor version of all major should be highlighted) , GCSEI (Google Custom Search Engine ID)
 #
 # Lines like these are comments
@@ -34,13 +34,14 @@ versions
 //docs.cask.co/cdap/json-versions.js
 
 development
-6.2.0-SNAPSHOT, 6.2.0, '',
+6.3.0-SNAPSHOT, 6.3.0, '',
 
 current
-# GCSEI for current          002451258715120217843:erm74tjlmcc 
-6.1.2, 6.1.2, 2020-04-12, '1', 002451258715120217843:erm74tjlmcc
+# GCSEI for current          002451258715120217843:erm74tjlmcc
+6.2.0, 6.2.0, 2020-05-27, '1', 002451258715120217843:erm74tjlmcc
 
 older
+6.1.2, 6.1.2, 2020-04-12, '1', 002451258715120217843:erm74tjlmcc
 6.1.1, 6.1.1, 2020-01-22, 1, 002451258715120217843:erm74tjlmcc
 6.0.0, 6.0.0, 2019-05-21, 1, 002451258715120217843:erm74tjlmcc
 5.1.2, 5.1.2, 2018-11-30, 1, 002451258715120217843:erm74tjlmcc
