@@ -34,10 +34,11 @@ versions
 //docs.cask.co/cdap/json-versions.js
 
 development
-6.5.0-SNAPSHOT, 6.5.0, '',
+6.6.0-SNAPSHOT, 6.6.0, '',
 
 current
-# GCSEI for current          002451258715120217843:erm74tjlmcc
+# GCSEI for current          002451258715120217843:erm74tjlmcci
+6.5.0, 6.5.0, 2021-08-27, '1', 002451258715120217843:erm74tjlmcc
 6.4.1, 6.4.1, 2021-05-25, '1', 002451258715120217843:erm74tjlmcc
 6.2.2, 6.2.2, 2020-09-21, '1', 002451258715120217843:erm74tjlmcc
 
